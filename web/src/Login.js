@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import InstallMetamaskModal from "./InstallMetamaskModal";
+import { useApp } from "./state/app.context";
 
 const Login = () => {
   const history = useHistory();

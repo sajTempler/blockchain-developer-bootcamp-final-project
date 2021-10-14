@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEthereum } from "@fortawesome/free-brands-svg-icons";
 
 import Grid from "@mui/material/Grid";
 import Avatar from "@mui/material/Avatar";
@@ -16,6 +18,8 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
 import Switch from "@mui/material/Switch";
+import { useBalance } from "./state/hooks";
+import { useApp } from "./state/app.context";
 
 const centerStyles = {
   alignItems: "center",
@@ -27,6 +31,9 @@ const Profile = () => {
   const logout = () => {
     history.push("/");
   };
+
+  const { state } = useApp();
+  const { balance } = useBalance();
 
   const [checked, setChecked] = useState(false);
 
@@ -52,6 +59,18 @@ const Profile = () => {
       </Grid>
       <Grid item xs={4}>
         <List component="nav" aria-label="mailbox folders">
+          <ListItem>
+            <ListItemText primary="Balance" />
+            <>
+              <Typography variant="h6" component="span">
+                {balance}
+              </Typography>
+              <FontAwesomeIcon
+                style={{ fontSize: "1rem", marginLeft: ".5rem" }}
+                icon={faEthereum}
+              />
+            </>
+          </ListItem>
           <ListItem button>
             <ListItemText primary="Settings" />
           </ListItem>
