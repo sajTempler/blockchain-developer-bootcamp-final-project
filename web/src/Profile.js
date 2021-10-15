@@ -19,7 +19,8 @@ import Button from "@mui/material/Button";
 
 import Switch from "@mui/material/Switch";
 import { useBalance } from "./state/hooks";
-import { useApp } from "./state/app.context";
+import SimpleStorage from "./SimpleStorage/SimpleStorage";
+import { SimpleStorageProvider } from "./SimpleStorage/context";
 
 const centerStyles = {
   alignItems: "center",
@@ -32,15 +33,10 @@ const Profile = () => {
     history.push("/");
   };
 
-  const { state } = useApp();
   const { balance } = useBalance();
 
   const [checked, setChecked] = useState(false);
-
-  const handleSwitchChange = ({ target }) => {
-    console.log(target.value);
-    setChecked((prev) => !prev);
-  };
+  const handleSwitchChange = ({ target }) => setChecked((prev) => !prev);
 
   return (
     <Grid container spacing={2}>
@@ -90,7 +86,16 @@ const Profile = () => {
             >
               Ethereum options
             </Typography>
-            <Typography variant="h5" component="div">
+
+            <SimpleStorageProvider>
+              <SimpleStorage />
+            </SimpleStorageProvider>
+
+            <Typography
+              style={{ marginTop: "2rem" }}
+              variant="h5"
+              component="div"
+            >
               Tokenize account
             </Typography>
             <Switch onChange={handleSwitchChange} checked={checked} />

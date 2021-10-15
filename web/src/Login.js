@@ -7,7 +7,6 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import InstallMetamaskModal from "./InstallMetamaskModal";
-import { useApp } from "./state/app.context";
 
 const Login = () => {
   const history = useHistory();
@@ -17,9 +16,16 @@ const Login = () => {
     history.push("/profile");
   };
 
-  const metamaskLogin = () => {
+  const metamaskLogin = async () => {
     if (!window?.ethereum) {
       setModalOpened(true);
+    } else {
+      try {
+        await window.ethereum.enable();
+        login();
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -33,7 +39,7 @@ const Login = () => {
           <Button onClick={login} variant="outlined">
             Login
           </Button>
-          <Button onClick={metamaskLogin} variant="outlined">
+          <Button onClick={() => metamaskLogin()} variant="outlined">
             Login with Metamask
           </Button>
         </Stack>
