@@ -34,13 +34,13 @@ const Login = () => {
       <Container maxWidth="sm">
         <h1>Login</h1>
         <Stack spacing={2}>
-          <TextField label="Username" variant="outlined" />
-          <TextField type="password" label="Password" variant="outlined" />
-          <Button onClick={login} variant="outlined">
+          <TextField disabled label="Username" variant="outlined" />
+          <TextField disabled type="password" label="Password" variant="outlined" />
+          {/* <Button onClick={login} variant="outlined">
             Login
-          </Button>
+          </Button> */}
           <Button onClick={() => metamaskLogin()} variant="outlined">
-            Login with Metamask
+            Connect Metamask
           </Button>
         </Stack>
       </Container>

@@ -17,10 +17,11 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 
-import Switch from "@mui/material/Switch";
 import { useBalance } from "./state/hooks";
 import SimpleStorage from "./SimpleStorage/SimpleStorage";
 import { SimpleStorageProvider } from "./SimpleStorage/context";
+import { TokenizeAccountProvider } from "./TokenizeAccount/context";
+import TokenizeAccount from "./TokenizeAccount/TokenizeAccount";
 
 const centerStyles = {
   alignItems: "center",
@@ -34,9 +35,6 @@ const Profile = () => {
   };
 
   const { balance } = useBalance();
-
-  const [checked, setChecked] = useState(false);
-  const handleSwitchChange = ({ target }) => setChecked((prev) => !prev);
 
   return (
     <Grid container spacing={2}>
@@ -91,19 +89,9 @@ const Profile = () => {
               <SimpleStorage />
             </SimpleStorageProvider>
 
-            <Typography
-              style={{ marginTop: "2rem" }}
-              variant="h5"
-              component="div"
-            >
-              Tokenize account
-            </Typography>
-            <Switch onChange={handleSwitchChange} checked={checked} />
-            {checked && (
-              <Typography variant="body2" component="p">
-                Token 123123123123123123
-              </Typography>
-            )}
+            <TokenizeAccountProvider>
+              <TokenizeAccount />
+            </TokenizeAccountProvider>
           </CardContent>
           <CardActions>
             <Button size="small">Learn More</Button>

@@ -1,0 +1,4 @@
+export const TOKENIZE_ACCOUNT = {
+  TOKENIZE: "TOKENIZE",
+  SET_PENDING: "SET_PENDING",
+};
