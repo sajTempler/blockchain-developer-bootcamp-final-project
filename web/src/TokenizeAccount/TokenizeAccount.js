@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import Switch from "@mui/material/Switch";
 
 import { useTokenizeAccount } from "./context";
@@ -17,8 +17,8 @@ const TokenizeAccount = () => {
   const { selectedAccount, contract } = useTokenizeAccountContract();
   const { state, dispatch } = useTokenizeAccount();
   const { provider } = useProvider();
-  useAccountTokenizedListener(contract, selectedAccount, dispatch);
-  useInitAccountToken(contract, selectedAccount, dispatch);
+  useAccountTokenizedListener(contract, dispatch);
+  useInitAccountToken(contract, dispatch);
 
   const handleSwitchChange = () => {
     dispatch({

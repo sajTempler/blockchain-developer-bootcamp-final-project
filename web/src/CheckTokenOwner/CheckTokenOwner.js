@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useForm } from "react-hook-form";
@@ -27,6 +27,11 @@ const CheckTokenOwner = () => {
       });
     reset();
   };
+
+  useEffect(() => {
+    setLoading("IDLE");
+    setOwner();
+  }, [selectedAccount]);
 
   return (
     <>

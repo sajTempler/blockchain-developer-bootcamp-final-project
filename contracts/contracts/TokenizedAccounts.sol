@@ -12,7 +12,7 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
 
   /// @notice Emitted when a new account is minted
   /// @param accountToken Account token
-  event AccountTokenized(uint256 indexed accountToken);
+  event AccountTokenized(uint256 indexed accountToken, address indexed userAccount);
 
   /// @notice Mapping from owner address to token (Account Token)
   mapping(address => uint256) private _tokenHolders;
@@ -33,7 +33,7 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
       _safeMint(userAccount, newItemId);
       _setTokenURI(newItemId, tokenURI);
       _addTokenForOwner(userAccount, newItemId);
-      emit AccountTokenized(newItemId);
+      emit AccountTokenized(newItemId, userAccount);
       return newItemId;
   }
 

@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { CONTRACT_MAP } from "../config";
 
 export const useAccount = () => {
-  const [balance, setBalance] = useState("n/a");
+  const [balance, setBalance] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 

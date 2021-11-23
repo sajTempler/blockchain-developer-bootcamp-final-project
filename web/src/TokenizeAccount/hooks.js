@@ -1,6 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { ethers } from "ethers";
-import { useTokenizeAccount } from "./context";
 import { CONTRACT_MAP } from "../config";
 import { TOKENIZE_ACCOUNT } from "./actions";
 import { useAccount } from "../state/hooks";
@@ -20,7 +19,10 @@ export const useTokenizeAccountContract = () => {
   const { provider } = useProvider();
   const { selectedAccount } = useAccount();
   const { address, abi } = CONTRACT_MAP["TokenizeAccount"];
-  const contract = new ethers.Contract(address, abi, provider.getSigner());
+  const contract = useMemo(
+    () => new ethers.Contract(address, abi, provider.getSigner()),
+    [provider]
+  );
 
   return {
     contract,
@@ -28,23 +30,22 @@ export const useTokenizeAccountContract = () => {
   };
 };
 
-export const useAccountTokenizedListener = (
-  contract,
-  selectedAccount,
-  dispatch
-) => {
+export const useAccountTokenizedListener = (contract, dispatch) => {
+  const { selectedAccount } = useAccount();
   useEffect(() => {
     if (contract && selectedAccount) {
       // A filter for when a specific address receives tokens
       // const filter = contract.filters.AccountTokenized(selectedAccount);
 
-      const callback = (token, event) => {
-        console.log("AccountTokenized event", event);
-        console.log(`Tokenized ${token}`);
-        dispatch({
-          type: TOKENIZE_ACCOUNT.SET_TOKEN,
-          payload: { token: `${token}` },
-        });
+      const callback = (token, owner, event) => {
+        if (owner === selectedAccount) {
+          console.log("useAccountTokenizedListener AccountTokenized event", event);
+          console.log(`useAccountTokenizedListener Tokenized ${token}`);
+          dispatch({
+            type: TOKENIZE_ACCOUNT.SET_TOKEN,
+            payload: { token: `${token}` },
+          });
+        }
       };
 
       contract.on("AccountTokenized", callback);
@@ -53,9 +54,10 @@ export const useAccountTokenizedListener = (
   }, [contract, selectedAccount]);
 };
 
-export const useInitAccountToken = (contract, selectedAccount, dispatch) => {
+export const useInitAccountToken = (contract, dispatch) => {
+  const { selectedAccount } = useAccount();
   useEffect(() => {
-    if (selectedAccount) {
+    if (contract && selectedAccount) {
       contract
         .retrieveMyAccountTokens(selectedAccount)
         .then((token) => {
@@ -65,9 +67,14 @@ export const useInitAccountToken = (contract, selectedAccount, dispatch) => {
               type: TOKENIZE_ACCOUNT.SET_TOKEN,
               payload: { token: `${token}` },
             });
+          } else {
+            dispatch({
+              type: TOKENIZE_ACCOUNT.SET_TOKEN,
+              payload: { token: "", accountTokenized: false },
+            });
           }
         })
         .catch(console.error);
     }
-  }, [selectedAccount]);
+  }, [contract, selectedAccount]);
 };

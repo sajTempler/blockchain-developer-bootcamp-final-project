@@ -16,7 +16,7 @@ function reducer(state, { type, payload, error }) {
       return {
         ...state,
         token: payload.token,
-        accountTokenized: true,
+        accountTokenized: payload.accountTokenized ?? true,
       };
     }
     case TOKENIZE_ACCOUNT.SET_PENDING: {
