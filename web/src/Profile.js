@@ -15,7 +15,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
-import { useBalance } from "./state/hooks";
+import { useAccount } from "./state/hooks";
 import SimpleStorage from "./SimpleStorage/SimpleStorage";
 import { SimpleStorageProvider } from "./SimpleStorage/context";
 import { TokenizeAccountProvider } from "./TokenizeAccount/context";
@@ -33,7 +33,7 @@ const Profile = () => {
     history.push("/");
   };
 
-  const { balance, selectedAccount } = useBalance();
+  const { balance, selectedAccount } = useAccount();
 
   return (
     <Grid container spacing={2}>

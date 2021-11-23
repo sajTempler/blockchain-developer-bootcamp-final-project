@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { useTokenizeAccount } from "./context";
 import { CONTRACT_MAP } from "../config";
 import { TOKENIZE_ACCOUNT } from "./actions";
+import { useAccount } from "../state/hooks";
 
 export const useProvider = () => {
   const provider = useMemo(
@@ -16,25 +17,10 @@ export const useProvider = () => {
 };
 
 export const useTokenizeAccountContract = () => {
-  const [selectedAccount, setSelectedAccount] = useState("");
-  const { dispatch } = useTokenizeAccount();
   const { provider } = useProvider();
+  const { selectedAccount } = useAccount();
   const { address, abi } = CONTRACT_MAP["TokenizeAccount"];
   const contract = new ethers.Contract(address, abi, provider.getSigner());
-
-  useEffect(() => {
-    const getBalance = async () => {
-      const signer = provider.getSigner();
-      const address = await signer.getAddress();
-      setSelectedAccount(address);
-      const balance = ethers.utils.formatEther(
-        await contract.balanceOf(address)
-      );
-      console.log("useTokenizeAccountContract balance", balance);
-    };
-
-    getBalance().catch(console.error);
-  }, [provider]);
 
   return {
     contract,

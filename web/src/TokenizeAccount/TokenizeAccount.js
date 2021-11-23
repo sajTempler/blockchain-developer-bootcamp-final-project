@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Typography } from "@mui/material";
 import Switch from "@mui/material/Switch";
 
@@ -24,6 +24,7 @@ const TokenizeAccount = () => {
     dispatch({
       type: TOKENIZE_ACCOUNT.SET_PENDING,
     });
+    console.log("tokenize!!!");
     contract
       .tokenize(
         selectedAccount,
@@ -47,14 +48,10 @@ const TokenizeAccount = () => {
       });
   };
 
-  const more = () => {
-    console.log("more");
-  };
-
   return (
     <>
       <Typography sx={{ my: 2 }} variant="h5" component="div">
-        Tokenize account
+        {state.accountTokenized ? "Account tokenized" : "Tokenize account"}
       </Typography>
       <Switch
         disabled={state.accountTokenized || state.state === "TOKENIZE_STARTED"}
@@ -66,7 +63,6 @@ const TokenizeAccount = () => {
           Token {state?.token && state.token}
         </Typography>
       )}
-      <Button onClick={more}>more info</Button>
     </>
   );
 };

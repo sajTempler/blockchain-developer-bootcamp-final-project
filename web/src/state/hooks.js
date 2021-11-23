@@ -2,23 +2,28 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_MAP } from "../config";
 
-export const useBalance = () => {
+export const useAccount = () => {
   const [balance, setBalance] = useState("n/a");
-  const [selectedAccount, setSelectedAccount] = useState("n/a");
+  const [selectedAccount, setSelectedAccount] = useState("");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   useEffect(() => {
-    if (provider) {
-      const getBalance = async () => {
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        setSelectedAccount(address);
-        const ethBalance = await provider.getBalance(address);
-        setBalance(ethers.utils.formatEther(ethBalance));
-      };
+    const init = async () => {
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      const ethBalance = await provider.getBalance(address);
+      setBalance(ethers.utils.formatEther(ethBalance));
+      setSelectedAccount(address);
+    };
 
-      getBalance();
-    }
+    const callback = function () {
+      init();
+    };
+
+    window.ethereum.on("accountsChanged", callback);
+
+    init();
+    return () => window.ethereum.removeListener("accountsChanged", callback);
   }, [provider]);
 
   return {
