@@ -21,7 +21,9 @@ import TokenizeAccount from "./TokenizeAccount/TokenizeAccount";
 import CheckTokenOwner from "./CheckTokenOwner/CheckTokenOwner";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { Tooltip } from "@mui/material";
+import { Paper, Tooltip } from "@mui/material";
+import PutAccountForSale from "./PutAccountForSale/PutAccountForSale";
+import Market from "./Market/Market";
 
 const centerStyles = {
   alignItems: "center",
@@ -99,6 +101,9 @@ const Profile = () => {
           <ListItem button>
             <ListItemText primary="Settings" />
           </ListItem>
+          <ListItem button>
+            <ListItemText primary="Marketplace" />
+          </ListItem>
           <Divider />
           <ListItem onClick={logout} button divider>
             <ListItemText primary="Logout" />
@@ -118,8 +123,21 @@ const Profile = () => {
 
             <TokenizeAccountProvider>
               <TokenizeAccount />
+              <PutAccountForSale />
               <CheckTokenOwner />
             </TokenizeAccountProvider>
+          </CardContent>
+        </Card>
+        <Card sx={{ minWidth: 275, my: 4 }}>
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Market
+            </Typography>
+            <Market />
           </CardContent>
         </Card>
       </Grid>

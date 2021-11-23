@@ -1,11 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_MAP } from "../config";
+
+export const useProvider = () => {
+  const provider = useMemo(
+    () => new ethers.providers.Web3Provider(window.ethereum),
+    []
+  );
+
+  return {
+    provider,
+  };
+};
 
 export const useAccount = () => {
   const [balance, setBalance] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const { provider } = useProvider();
 
   useEffect(() => {
     const init = async () => {
@@ -35,8 +46,8 @@ export const useAccount = () => {
 export const useContract = (contractName) => {
   if (!Object.keys(CONTRACT_MAP).includes(contractName))
     throw new Error(`Contract: ${contractName} is not configured`);
-
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+    
+  const { provider } = useProvider();
   const { address, abi } = CONTRACT_MAP[contractName];
   const contract = new ethers.Contract(address, abi, provider.getSigner());
 
@@ -48,7 +59,9 @@ export const useContract = (contractName) => {
     provider.on("block", (blockNumber) => {
       console.log(blockNumber);
     });
-  }, []);
+
+    return () => provider.removeAllListeners();
+  }, [provider]);
 
   return {
     contract,

@@ -14,6 +14,7 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
   /// @notice Emitted when a new account is minted
   /// @param accountToken Account token
   event AccountTokenized(uint256 indexed accountToken, address indexed userAccount);
+  event AccountPutForSale(uint256 indexed price, address indexed seller);
 
   /// @notice Mapping from owner address to token (Account Token)
   mapping(address => uint256) private _tokenHolders;
@@ -79,7 +80,7 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
 
   /// @notice Returns a token for given user, only owner can lookup his tokens
   /// @param owner owner address for whom the token will be assigned
-  function retrieveMyAccountTokens(address owner) public view returns (uint256) {
+  function retrieveMyAccountToken(address owner) public view returns (uint256) {
     require(owner == msg.sender, "Only owner can check his tokens");
     return _tokenHolders[owner];
   }
@@ -92,6 +93,7 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
 
 
     offers[tokenId] = AccountOffer(price, msg.sender);
+    emit AccountPutForSale(price, msg.sender);
   }
 
   function buyAccount(uint256 tokenId) public payable {

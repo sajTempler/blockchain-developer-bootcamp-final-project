@@ -4,7 +4,7 @@
 
 export const CONTRACT_MAP = {
   TokenizeAccount: {
-    address: "0x0A84c51ECf4F534377d076ec9C0d221005593f2E",
+    address: "0xF227B8587C40BA6b29C2Ae5c1a5762362079Ff9c",
     abi: [
       {
         "inputs": [],
@@ -483,7 +483,7 @@ export const CONTRACT_MAP = {
             "type": "address"
           }
         ],
-        "name": "retrieveMyAccountTokens",
+        "name": "retrieveMyAccountToken",
         "outputs": [
           {
             "internalType": "uint256",

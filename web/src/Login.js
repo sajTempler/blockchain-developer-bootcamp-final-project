@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import InstallMetamaskModal from "./InstallMetamaskModal";
-import { useProvider } from "./TokenizeAccount/hooks";
+import { useProvider } from "./state/hooks";
 
 const Login = () => {
   const history = useHistory();

@@ -2,18 +2,7 @@ import { useEffect, useMemo } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_MAP } from "../config";
 import { TOKENIZE_ACCOUNT } from "./actions";
-import { useAccount } from "../state/hooks";
-
-export const useProvider = () => {
-  const provider = useMemo(
-    () => new ethers.providers.Web3Provider(window.ethereum),
-    []
-  );
-
-  return {
-    provider,
-  };
-};
+import { useAccount, useProvider } from "../state/hooks";
 
 export const useTokenizeAccountContract = () => {
   const { provider } = useProvider();
@@ -21,7 +10,7 @@ export const useTokenizeAccountContract = () => {
   const { address, abi } = CONTRACT_MAP["TokenizeAccount"];
   const contract = useMemo(
     () => new ethers.Contract(address, abi, provider.getSigner()),
-    [provider]
+    [provider, abi, address]
   );
 
   return {
@@ -39,7 +28,10 @@ export const useAccountTokenizedListener = (contract, dispatch) => {
 
       const callback = (token, owner, event) => {
         if (owner === selectedAccount) {
-          console.log("useAccountTokenizedListener AccountTokenized event", event);
+          console.log(
+            "useAccountTokenizedListener AccountTokenized event",
+            event
+          );
           console.log(`useAccountTokenizedListener Tokenized ${token}`);
           dispatch({
             type: TOKENIZE_ACCOUNT.SET_TOKEN,
@@ -51,7 +43,7 @@ export const useAccountTokenizedListener = (contract, dispatch) => {
       contract.on("AccountTokenized", callback);
       return () => contract.removeListener("AccountTokenized", callback);
     }
-  }, [contract, selectedAccount]);
+  }, [contract, selectedAccount, dispatch]);
 };
 
 export const useInitAccountToken = (contract, dispatch) => {
@@ -59,7 +51,7 @@ export const useInitAccountToken = (contract, dispatch) => {
   useEffect(() => {
     if (contract && selectedAccount) {
       contract
-        .retrieveMyAccountTokens(selectedAccount)
+        .retrieveMyAccountToken(selectedAccount)
         .then((token) => {
           // "0" indicates no tokens for account
           if (`${token}` !== "0") {
@@ -76,5 +68,5 @@ export const useInitAccountToken = (contract, dispatch) => {
         })
         .catch(console.error);
     }
-  }, [contract, selectedAccount]);
+  }, [contract, selectedAccount, dispatch]);
 };

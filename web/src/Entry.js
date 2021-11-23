@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { ethers } from "ethers";
 
 import Login from "./Login";
 import Profile from "./Profile";

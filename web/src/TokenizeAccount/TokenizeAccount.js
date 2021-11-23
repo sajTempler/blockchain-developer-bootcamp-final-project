@@ -6,10 +6,10 @@ import { useTokenizeAccount } from "./context";
 import {
   useAccountTokenizedListener,
   useInitAccountToken,
-  useProvider,
   useTokenizeAccountContract,
 } from "./hooks";
 import { TOKENIZE_ACCOUNT } from "./actions";
+import { useProvider } from "../state/hooks";
 
 const TokenizeAccount = () => {
   // example user id from any platform
