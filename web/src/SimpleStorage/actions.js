@@ -1,4 +1,0 @@
-export const SIMPLE_STORAGE = {
-  SET_VALUE: "SET_VALUE",
-  SET_PENDING: "SET_PENDING",
-};

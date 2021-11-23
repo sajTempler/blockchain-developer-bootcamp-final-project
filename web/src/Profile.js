@@ -16,8 +16,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
 import { useAccount } from "./state/hooks";
-import SimpleStorage from "./SimpleStorage/SimpleStorage";
-import { SimpleStorageProvider } from "./SimpleStorage/context";
 import { TokenizeAccountProvider } from "./TokenizeAccount/context";
 import TokenizeAccount from "./TokenizeAccount/TokenizeAccount";
 import CheckTokenOwner from "./CheckTokenOwner/CheckTokenOwner";
@@ -117,10 +115,6 @@ const Profile = () => {
             >
               Ethereum options
             </Typography>
-
-            {/* <SimpleStorageProvider>
-              <SimpleStorage />
-            </SimpleStorageProvider> */}
 
             <TokenizeAccountProvider>
               <TokenizeAccount />

@@ -1,45 +1,10 @@
 // be vary
-// address is different in contracts/build SimpleStorage.json
+// address is different in contracts/build TokenizeAccount.json
 // than address in CLI from truffle
 
 export const CONTRACT_MAP = {
-  SimpleStorage: {
-    address: "0xA57Ec78EDEb9619c7de95d9eE04F406b02fd12f6",
-    abi: [
-      {
-        "constant": false,
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "x",
-            "type": "uint256"
-          }
-        ],
-        "name": "store",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "constant": true,
-        "inputs": [],
-        "name": "retrieve",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-      }
-    ]
-  },
   TokenizeAccount: {
-    address: "0x431d98f3Ad68376dc140ef490B4475d659c33741",
+    address: "0xEA346655B7E179ed0783c4397de9392Ad4150647",
     abi: [
       {
         "inputs": [],
