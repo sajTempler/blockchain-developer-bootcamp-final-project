@@ -65,8 +65,7 @@ const CheckTokenOwner = () => {
         )}
         {error && (
           <Typography
-            sx={{ my: 2 }}
-            color="danger"
+            sx={{ my: 2, color: "crimson" }}
             variant="body2"
             component="p"
           >

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
@@ -21,6 +21,9 @@ import { SimpleStorageProvider } from "./SimpleStorage/context";
 import { TokenizeAccountProvider } from "./TokenizeAccount/context";
 import TokenizeAccount from "./TokenizeAccount/TokenizeAccount";
 import CheckTokenOwner from "./CheckTokenOwner/CheckTokenOwner";
+import IconButton from "@mui/material/IconButton";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { Tooltip } from "@mui/material";
 
 const centerStyles = {
   alignItems: "center",
@@ -28,6 +31,7 @@ const centerStyles = {
 };
 
 const Profile = () => {
+  const [open, setOpen] = useState(false);
   const history = useHistory();
   const logout = () => {
     history.push("/");
@@ -35,14 +39,17 @@ const Profile = () => {
 
   const { balance, selectedAccount } = useAccount();
 
+  const copy = () => {
+    setOpen(true);
+    navigator.clipboard.writeText(selectedAccount);
+    setTimeout(() => {
+      setOpen(false);
+    }, 1000);
+  };
+
   return (
     <Grid container spacing={2}>
-      <Grid
-        container
-        sx={{ ...centerStyles, my: 4 }}
-        item
-        xs={4}
-      >
+      <Grid container sx={{ ...centerStyles, my: 4 }} item xs={4}>
         <Avatar sx={{ width: 100, height: 100 }}>
           <PersonIcon fontSize="large" />
         </Avatar>
@@ -65,13 +72,31 @@ const Profile = () => {
             </>
           </ListItem>
           <ListItem>
-            <ListItemText sx={{flex: 1}} primary="Account" />
+            <ListItemText sx={{ flex: 1 }} primary="Account" />
             <Typography
               sx={{ flex: 2, overflow: "hidden", textOverflow: "ellipsis" }}
               variant="span"
             >
               {selectedAccount}
             </Typography>
+            <Tooltip
+              PopperProps={{
+                disablePortal: true,
+              }}
+              open={open}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              title="Copied!"
+            >
+              <IconButton
+                aria-label="copy account"
+                component="span"
+                onClick={copy}
+              >
+                <ContentCopyIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
           </ListItem>
           <ListItem button>
             <ListItemText primary="Settings" />
