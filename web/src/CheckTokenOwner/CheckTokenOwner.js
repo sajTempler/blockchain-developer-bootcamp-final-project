@@ -9,6 +9,7 @@ import { useTokenizeAccountContract } from "../TokenizeAccount/hooks";
 const CheckTokenOwner = () => {
   const [loading, setLoading] = useState("IDLE"); // "IDLE" | "PENDING" | "LOADED" | "ERROR"
   const [owner, setOwner] = useState();
+  const [error, setError] = useState();
   const { selectedAccount, contract } = useTokenizeAccountContract();
   const { register, handleSubmit, reset } = useForm();
 
@@ -19,10 +20,12 @@ const CheckTokenOwner = () => {
       .then((ownerAddress) => {
         setLoading("LOADED");
         setOwner(ownerAddress);
+        setError();
       })
       .catch((e) => {
         setLoading("ERROR");
         setOwner();
+        setError(e?.data?.message ?? "Unknown error");
         console.error(e);
       });
     reset();
@@ -31,6 +34,7 @@ const CheckTokenOwner = () => {
   useEffect(() => {
     setLoading("IDLE");
     setOwner();
+    setError();
   }, [selectedAccount]);
 
   return (
@@ -57,6 +61,16 @@ const CheckTokenOwner = () => {
         {owner && (
           <Typography sx={{ my: 2 }} variant="body2" component="p">
             Owner is: {owner}
+          </Typography>
+        )}
+        {error && (
+          <Typography
+            sx={{ my: 2 }}
+            color="danger"
+            variant="body2"
+            component="p"
+          >
+            {error}
           </Typography>
         )}
       </Box>

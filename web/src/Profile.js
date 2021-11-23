@@ -39,7 +39,7 @@ const Profile = () => {
     <Grid container spacing={2}>
       <Grid
         container
-        style={{ ...centerStyles, padding: "2rem 0" }}
+        sx={{ ...centerStyles, my: 4 }}
         item
         xs={4}
       >
