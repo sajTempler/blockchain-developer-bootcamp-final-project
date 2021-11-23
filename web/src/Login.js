@@ -7,10 +7,12 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 import InstallMetamaskModal from "./InstallMetamaskModal";
+import { useProvider } from "./TokenizeAccount/hooks";
 
 const Login = () => {
   const history = useHistory();
   const [modalOpened, setModalOpened] = useState(false);
+  const { provider } = useProvider();
 
   const login = () => {
     history.push("/profile");
@@ -21,7 +23,7 @@ const Login = () => {
       setModalOpened(true);
     } else {
       try {
-        await window.ethereum.enable();
+        await provider.send("eth_requestAccounts", []);
         login();
       } catch (e) {
         console.error(e);
@@ -35,7 +37,12 @@ const Login = () => {
         <h1>Login</h1>
         <Stack spacing={2}>
           <TextField disabled label="Username" variant="outlined" />
-          <TextField disabled type="password" label="Password" variant="outlined" />
+          <TextField
+            disabled
+            type="password"
+            label="Password"
+            variant="outlined"
+          />
           {/* <Button onClick={login} variant="outlined">
             Login
           </Button> */}

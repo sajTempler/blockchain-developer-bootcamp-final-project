@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Button, Typography } from "@mui/material";
 import Switch from "@mui/material/Switch";
 
 import { useTokenizeAccount } from "./context";
 import {
   useAccountTokenizedListener,
+  useInitAccountToken,
   useProvider,
   useTokenizeAccountContract,
 } from "./hooks";
@@ -17,6 +18,7 @@ const TokenizeAccount = () => {
   const { state, dispatch } = useTokenizeAccount();
   const { provider } = useProvider();
   useAccountTokenizedListener(contract, selectedAccount, dispatch);
+  useInitAccountToken(contract, selectedAccount, dispatch);
 
   const handleSwitchChange = () => {
     dispatch({
@@ -45,34 +47,13 @@ const TokenizeAccount = () => {
       });
   };
 
-  const retrieveTokens = (selectedAccount) =>
-    contract
-      .retrieveMyAccountTokens(selectedAccount)
-      .then((token) => {
-        // "0" indicates no tokens for account
-        if (`${token}` !== "0") {
-          dispatch({
-            type: TOKENIZE_ACCOUNT.SET_TOKEN,
-            payload: { token: `${token}` },
-          });
-        }
-      })
-      .catch(console.error);
-
-  useEffect(() => {
-    if (selectedAccount) {
-      retrieveTokens(selectedAccount);
-    }
-  }, [selectedAccount]);
-
   const more = () => {
     console.log("more");
-    retrieveTokens(selectedAccount);
   };
 
   return (
     <>
-      <Typography style={{ marginTop: "2rem" }} variant="h5" component="div">
+      <Typography sx={{ my: 2 }} variant="h5" component="div">
         Tokenize account
       </Typography>
       <Switch
@@ -81,7 +62,7 @@ const TokenizeAccount = () => {
         checked={state.accountTokenized}
       />
       {state?.accountTokenized && (
-        <Typography variant="body2" component="p">
+        <Typography sx={{ my: 2 }} variant="body2" component="p">
           Token {state?.token && state.token}
         </Typography>
       )}

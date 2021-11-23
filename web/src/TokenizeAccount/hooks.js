@@ -24,10 +24,11 @@ export const useTokenizeAccountContract = () => {
 
   useEffect(() => {
     const getBalance = async () => {
-      const addresses = await provider.listAccounts();
-      setSelectedAccount(addresses[0]);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      setSelectedAccount(address);
       const balance = ethers.utils.formatEther(
-        await contract.balanceOf(addresses[0])
+        await contract.balanceOf(address)
       );
       console.log("useTokenizeAccountContract balance", balance);
     };
@@ -64,4 +65,23 @@ export const useAccountTokenizedListener = (
       return () => contract.removeListener("AccountTokenized", callback);
     }
   }, [contract, selectedAccount]);
+};
+
+export const useInitAccountToken = (contract, selectedAccount, dispatch) => {
+  useEffect(() => {
+    if (selectedAccount) {
+      contract
+        .retrieveMyAccountTokens(selectedAccount)
+        .then((token) => {
+          // "0" indicates no tokens for account
+          if (`${token}` !== "0") {
+            dispatch({
+              type: TOKENIZE_ACCOUNT.SET_TOKEN,
+              payload: { token: `${token}` },
+            });
+          }
+        })
+        .catch(console.error);
+    }
+  }, [selectedAccount]);
 };

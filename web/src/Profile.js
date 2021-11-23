@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
@@ -13,15 +13,14 @@ import Typography from "@mui/material/Typography";
 import PersonIcon from "@mui/icons-material/Person";
 
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 
 import { useBalance } from "./state/hooks";
 import SimpleStorage from "./SimpleStorage/SimpleStorage";
 import { SimpleStorageProvider } from "./SimpleStorage/context";
 import { TokenizeAccountProvider } from "./TokenizeAccount/context";
 import TokenizeAccount from "./TokenizeAccount/TokenizeAccount";
+import CheckTokenOwner from "./CheckTokenOwner/CheckTokenOwner";
 
 const centerStyles = {
   alignItems: "center",
@@ -34,7 +33,7 @@ const Profile = () => {
     history.push("/");
   };
 
-  const { balance } = useBalance();
+  const { balance, selectedAccount } = useBalance();
 
   return (
     <Grid container spacing={2}>
@@ -65,6 +64,15 @@ const Profile = () => {
               />
             </>
           </ListItem>
+          <ListItem>
+            <ListItemText sx={{flex: 1}} primary="Account" />
+            <Typography
+              sx={{ flex: 2, overflow: "hidden", textOverflow: "ellipsis" }}
+              variant="span"
+            >
+              {selectedAccount}
+            </Typography>
+          </ListItem>
           <ListItem button>
             <ListItemText primary="Settings" />
           </ListItem>
@@ -91,6 +99,7 @@ const Profile = () => {
 
             <TokenizeAccountProvider>
               <TokenizeAccount />
+              <CheckTokenOwner />
             </TokenizeAccountProvider>
           </CardContent>
         </Card>

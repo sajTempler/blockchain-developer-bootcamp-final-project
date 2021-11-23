@@ -39,7 +39,7 @@ export const CONTRACT_MAP = {
     ]
   },
   TokenizeAccount: {
-    address: "0x93b5F4e47c9557CfC7883Feeca7BF023cDEc57ba",
+    address: "0xb3e574e3495B3a79f8E79E938BE88e5caD198C88",
     abi: [
       {
         "inputs": [],

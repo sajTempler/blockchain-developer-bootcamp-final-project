@@ -4,13 +4,16 @@ import { CONTRACT_MAP } from "../config";
 
 export const useBalance = () => {
   const [balance, setBalance] = useState("n/a");
+  const [selectedAccount, setSelectedAccount] = useState("n/a");
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   useEffect(() => {
     if (provider) {
       const getBalance = async () => {
-        const address = await provider.listAccounts();
-        const ethBalance = await provider.getBalance(address[0]);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        setSelectedAccount(address);
+        const ethBalance = await provider.getBalance(address);
         setBalance(ethers.utils.formatEther(ethBalance));
       };
 
@@ -20,6 +23,7 @@ export const useBalance = () => {
 
   return {
     balance,
+    selectedAccount,
   };
 };
 
