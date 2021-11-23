@@ -4,7 +4,7 @@
 
 export const CONTRACT_MAP = {
   TokenizeAccount: {
-    address: "0xEA346655B7E179ed0783c4397de9392Ad4150647",
+    address: "0x0A84c51ECf4F534377d076ec9C0d221005593f2E",
     abi: [
       {
         "inputs": [],
@@ -215,6 +215,31 @@ export const CONTRACT_MAP = {
             "internalType": "string",
             "name": "",
             "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "offers",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "seller",
+            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -469,6 +494,38 @@ export const CONTRACT_MAP = {
         "stateMutability": "view",
         "type": "function",
         "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          }
+        ],
+        "name": "addAccountForSale",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          }
+        ],
+        "name": "buyAccount",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function",
+        "payable": true
       }
     ]
   }
