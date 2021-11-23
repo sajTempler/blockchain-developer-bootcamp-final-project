@@ -54,6 +54,7 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
   }
 
   function _addTokenForOwner(address owner, uint256 token) private {
+    // todo handle case when owner already have an account 
     _tokenHolders[owner] = token;
   }
 

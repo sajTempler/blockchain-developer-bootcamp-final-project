@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { CONTRACT_MAP } from "./config";
+import { CONTRACT_MAP } from "../config";
 
 export const useBalance = () => {
   const [balance, setBalance] = useState("n/a");

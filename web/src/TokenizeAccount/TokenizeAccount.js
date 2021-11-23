@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Switch from "@mui/material/Switch";
 
 import { useTokenizeAccount } from "./context";
-import { useProvider, useTokenizeAccountContract } from "./hooks";
+import {
+  useAccountTokenizedListener,
+  useProvider,
+  useTokenizeAccountContract,
+} from "./hooks";
+import { TOKENIZE_ACCOUNT } from "./actions";
 
 const TokenizeAccount = () => {
   // example user id from any platform
@@ -11,9 +16,12 @@ const TokenizeAccount = () => {
   const { selectedAccount, contract } = useTokenizeAccountContract();
   const { state, dispatch } = useTokenizeAccount();
   const { provider } = useProvider();
+  useAccountTokenizedListener(contract, selectedAccount, dispatch);
 
-  const [checked, setChecked] = useState(false);
   const handleSwitchChange = () => {
+    dispatch({
+      type: TOKENIZE_ACCOUNT.SET_PENDING,
+    });
     contract
       .tokenize(
         selectedAccount,
@@ -21,34 +29,46 @@ const TokenizeAccount = () => {
         `${window.location.origin}/api/user/${userId}`
       )
       .then((res) => {
-        console.log("tokenize", res);
+        console.log("contract tokenize", res);
         provider
           .waitForTransaction(res.hash)
           .then((res) => {
-            console.log("waitForTransaction res", res);
-            setChecked((prev) => !prev);
+            console.log("contract tokenize waitForTransaction res", res);
+            dispatch({
+              type: TOKENIZE_ACCOUNT.SET_COMPLETED,
+            });
           })
           .catch(console.error);
       })
-      .catch(console.error);
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
-  const [token, setToken] = useState("");
+  const retrieveTokens = (selectedAccount) =>
+    contract
+      .retrieveMyAccountTokens(selectedAccount)
+      .then((token) => {
+        // "0" indicates no tokens for account
+        if (`${token}` !== "0") {
+          dispatch({
+            type: TOKENIZE_ACCOUNT.SET_TOKEN,
+            payload: { token: `${token}` },
+          });
+        }
+      })
+      .catch(console.error);
 
   useEffect(() => {
-    if (contract && selectedAccount) {
-      contract
-        .retrieveMyAccountTokens(selectedAccount)
-        .then((res) => {
-          console.log("retrieveMyAccountTokens", res.toString());
-          setToken(res.toString());
-          if (res.toString() !== "0") {
-            setChecked(true);
-          }
-        })
-        .catch(console.error);
+    if (selectedAccount) {
+      retrieveTokens(selectedAccount);
     }
-  }, [contract, selectedAccount]);
+  }, [selectedAccount]);
+
+  const more = () => {
+    console.log("more");
+    retrieveTokens(selectedAccount);
+  };
 
   return (
     <>
@@ -56,15 +76,16 @@ const TokenizeAccount = () => {
         Tokenize account
       </Typography>
       <Switch
-        disabled={checked}
+        disabled={state.accountTokenized || state.state === "TOKENIZE_STARTED"}
         onChange={handleSwitchChange}
-        checked={checked}
+        checked={state.accountTokenized}
       />
-      {checked && (
+      {state?.accountTokenized && (
         <Typography variant="body2" component="p">
-          Token {token && token}
+          Token {state?.token && state.token}
         </Typography>
       )}
+      <Button onClick={more}>more info</Button>
     </>
   );
 };

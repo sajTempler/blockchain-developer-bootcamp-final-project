@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { ethers } from "ethers";
 import { SIMPLE_STORAGE } from "./actions";
 import { useSimpleStorage } from "./context";
-import { CONTRACT_MAP } from "../state/config";
+import { CONTRACT_MAP } from "../config";
 
 export const useSimpleStorageContract = () => {
   const { dispatch } = useSimpleStorage();

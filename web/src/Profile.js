@@ -85,17 +85,14 @@ const Profile = () => {
               Ethereum options
             </Typography>
 
-            <SimpleStorageProvider>
+            {/* <SimpleStorageProvider>
               <SimpleStorage />
-            </SimpleStorageProvider>
+            </SimpleStorageProvider> */}
 
             <TokenizeAccountProvider>
               <TokenizeAccount />
             </TokenizeAccountProvider>
           </CardContent>
-          <CardActions>
-            <Button size="small">Learn More</Button>
-          </CardActions>
         </Card>
       </Grid>
     </Grid>

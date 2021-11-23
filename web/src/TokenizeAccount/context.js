@@ -5,21 +5,31 @@ const TokenizeAccountContext = createContext();
 
 const initialState = {
   token: "",
-  pendingTx: false,
+  accountTokenized: false,
+  status: "IDLE", // "IDLE" | "TOKENIZE_STARTED" | "TOKENIZE_FINISHED" | "ERROR"
 };
 
 function reducer(state, { type, payload, error }) {
+  console.log(`TokenizeAccountContext type: ${type}`, payload);
   switch (type) {
-    case TOKENIZE_ACCOUNT.SET_VALUE: {
+    case TOKENIZE_ACCOUNT.SET_TOKEN: {
       return {
         ...state,
-        token: payload,
+        token: payload.token,
+        accountTokenized: true,
       };
     }
     case TOKENIZE_ACCOUNT.SET_PENDING: {
       return {
         ...state,
-        pendingTx: payload,
+        status: "TOKENIZE_STARTED",
+      };
+    }
+    case TOKENIZE_ACCOUNT.SET_COMPLETED: {
+      return {
+        ...state,
+        status: "TOKENIZE_FINISHED",
+        accountTokenized: true,
       };
     }
     default: {
