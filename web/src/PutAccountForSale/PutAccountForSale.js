@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 const PutAccountForSale = () => {
   const [loading, setLoading] = useState("IDLE"); // "IDLE" | "PENDING" | "LOADED" | "ERROR"
   const [error, setError] = useState();
-  const { state, dispatch } = useTokenizeAccount();
+  const { state } = useTokenizeAccount();
   const { selectedAccount, contract } = useTokenizeAccountContract();
   const { register, handleSubmit, reset } = useForm();
 
@@ -21,7 +21,7 @@ const PutAccountForSale = () => {
     const price = ethers.utils.parseEther(form.amount);
 
     contract
-      .retrieveMyAccountToken(selectedAccount)
+      .retrieveMyToken(selectedAccount)
       .then((token) => `${token}`)
       .then((tokenId) => {
         contract

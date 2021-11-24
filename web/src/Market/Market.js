@@ -13,10 +13,26 @@ const Market = () => {
   const { contract } = useTokenizeAccountContract();
 
   useEffect(() => {
-    contract.offers(1).then((res) => {
-      console.log("offers", res);
-    });
-  }, []);
+    contract
+      .offersCount()
+      .then((offersCount) => {
+        const count = +`${offersCount}`;
+        console.log("offersCount", `${offersCount}`);
+
+        if (count > 0) {
+          const promises = new Array(count).map((_, i) => {
+            return contract.offers(0);
+          });
+
+          Promise.allSettled(promises)
+            .then((res) => {
+              console.log(res);
+            })
+            .catch(console.error);
+        }
+      })
+      .catch(console.error);
+  }, [contract]);
 
   return (
     <Grid container spacing={2}>

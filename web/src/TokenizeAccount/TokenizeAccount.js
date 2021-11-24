@@ -24,7 +24,6 @@ const TokenizeAccount = () => {
     dispatch({
       type: TOKENIZE_ACCOUNT.SET_PENDING,
     });
-    console.log("tokenize!!!");
     contract
       .tokenize(
         selectedAccount,
@@ -41,10 +40,16 @@ const TokenizeAccount = () => {
               type: TOKENIZE_ACCOUNT.SET_COMPLETED,
             });
           })
-          .catch(console.error);
+          .catch((e) => {
+            console.error("waitForTransaction e", e);
+          });
       })
       .catch((e) => {
-        console.error(e);
+        console.error("tokenize e", e);
+        dispatch({
+          type: TOKENIZE_ACCOUNT.ERROR,
+          error: e?.data?.message ?? "Unknown error",
+        });
       });
   };
 
@@ -61,6 +66,15 @@ const TokenizeAccount = () => {
       {state?.accountTokenized && (
         <Typography sx={{ my: 2 }} variant="body2" component="p">
           Token {state?.token && state.token}
+        </Typography>
+      )}
+      {state?.error && (
+        <Typography
+          sx={{ my: 2, color: "crimson" }}
+          variant="body2"
+          component="p"
+        >
+          {state.error}
         </Typography>
       )}
     </>

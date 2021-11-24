@@ -23,6 +23,7 @@ function reducer(state, { type, payload, error }) {
       return {
         ...state,
         status: "TOKENIZE_STARTED",
+        error: undefined,
       };
     }
     case TOKENIZE_ACCOUNT.SET_COMPLETED: {
@@ -30,6 +31,13 @@ function reducer(state, { type, payload, error }) {
         ...state,
         status: "TOKENIZE_FINISHED",
         accountTokenized: true,
+        error: undefined,
+      };
+    }
+    case TOKENIZE_ACCOUNT.ERROR: {
+      return {
+        ...state,
+        error,
       };
     }
     default: {

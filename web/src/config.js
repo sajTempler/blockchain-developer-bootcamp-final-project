@@ -4,12 +4,31 @@
 
 export const CONTRACT_MAP = {
   TokenizeAccount: {
-    address: "0xF227B8587C40BA6b29C2Ae5c1a5762362079Ff9c",
+    address: "0x0ad07224247841fEf37e5CD446AB000688f02Ca3",
     abi: [
       {
         "inputs": [],
         "stateMutability": "nonpayable",
         "type": "constructor"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "seller",
+            "type": "address"
+          }
+        ],
+        "name": "AccountPutForSale",
+        "type": "event"
       },
       {
         "anonymous": false,
@@ -23,7 +42,7 @@ export const CONTRACT_MAP = {
           {
             "indexed": true,
             "internalType": "address",
-            "name": "userAccount",
+            "name": "ownerAddress",
             "type": "address"
           }
         ],
@@ -215,31 +234,6 @@ export const CONTRACT_MAP = {
             "internalType": "string",
             "name": "",
             "type": "string"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "name": "offers",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "price",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "seller",
-            "type": "address"
           }
         ],
         "stateMutability": "view",
@@ -447,10 +441,24 @@ export const CONTRACT_MAP = {
         "type": "function"
       },
       {
+        "inputs": [],
+        "name": "offersCount",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
         "inputs": [
           {
             "internalType": "address",
-            "name": "userAccount",
+            "name": "ownerAddress",
             "type": "address"
           },
           {
@@ -465,13 +473,7 @@ export const CONTRACT_MAP = {
           }
         ],
         "name": "tokenize",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
+        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
@@ -479,11 +481,11 @@ export const CONTRACT_MAP = {
         "inputs": [
           {
             "internalType": "address",
-            "name": "owner",
+            "name": "holder",
             "type": "address"
           }
         ],
-        "name": "retrieveMyAccountToken",
+        "name": "retrieveMyToken",
         "outputs": [
           {
             "internalType": "uint256",
@@ -526,6 +528,14 @@ export const CONTRACT_MAP = {
         "stateMutability": "payable",
         "type": "function",
         "payable": true
+      },
+      {
+        "inputs": [],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "pure",
+        "type": "function",
+        "constant": true
       }
     ]
   }

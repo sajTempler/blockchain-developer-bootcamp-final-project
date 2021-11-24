@@ -21,7 +21,7 @@ import TokenizeAccount from "./TokenizeAccount/TokenizeAccount";
 import CheckTokenOwner from "./CheckTokenOwner/CheckTokenOwner";
 import IconButton from "@mui/material/IconButton";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { Paper, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import PutAccountForSale from "./PutAccountForSale/PutAccountForSale";
 import Market from "./Market/Market";
 

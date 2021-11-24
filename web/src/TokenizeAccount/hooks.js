@@ -51,7 +51,7 @@ export const useInitAccountToken = (contract, dispatch) => {
   useEffect(() => {
     if (contract && selectedAccount) {
       contract
-        .retrieveMyAccountToken(selectedAccount)
+        .retrieveMyToken(selectedAccount)
         .then((token) => {
           // "0" indicates no tokens for account
           if (`${token}` !== "0") {
