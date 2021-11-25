@@ -27,7 +27,7 @@ const PutAccountForSale = () => {
       .then((token) => `${token}`)
       .then((tokenId) => {
         contract
-          .addAccountForSale(price, tokenId)
+          .addAccountForSale(price, tokenId, form.address)
           .then(() => {
             setError();
           })
@@ -64,6 +64,14 @@ const PutAccountForSale = () => {
               required: true,
             })}
             label="Amount (Eth)"
+            type="text"
+            disabled={!state?.accountTokenized || loading === "LOADED"}
+          />
+          <TextField
+            {...register("address", {
+              required: true,
+            })}
+            label="Buyer address"
             type="text"
             disabled={!state?.accountTokenized || loading === "LOADED"}
           />

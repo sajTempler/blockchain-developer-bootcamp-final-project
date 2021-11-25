@@ -19,21 +19,26 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
   /// @notice Emitted when an account is added for offers listing
   /// @param price Price for new listing
   /// @param seller Address of a seller
-  event AccountPutForSale(uint256 indexed price, address indexed seller);
+  /// @param receiver Approved addres of a buyer
+  event AccountPutForSale(uint256 indexed price, address indexed seller, address indexed receiver);
+
+  event AccountBought(uint256 indexed token, address indexed sender);
+
+  event AccountForSaleRemoved(uint256 indexed tokenId);
 
   /// @notice Mapping from owner address to token (Account Token)
   mapping(address => uint256) private _tokenHolders;
 
-  /// @notice This mapping holds available accounts for sale
-  mapping(uint256 => AccountOffer) private _offers;
+  /// @notice This mapping holds available account for sale for you
+  mapping(address => AccountOffer) private _offers;
 
-  /// @notice Keeps track of offers
-  uint256[] private _tokensForSale;
+  /// @notice This mapping holds available account for sale for you
+  mapping(address => AccountOffer) private _offersForSale;
 
   struct AccountOffer {
+    uint256 tokenId;
     uint256 price;
     address seller;
-    bool sold;
   }
 
   modifier onlyTokenHolder() {
@@ -49,12 +54,14 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
   constructor() ERC721("TokenizedAccount", "TDA") {
   }
 
-  function tokensForSale() public view returns (uint256[] memory) {
-    return _tokensForSale;
+  function myOffers() public view returns (AccountOffer memory) {
+    require(_offers[msg.sender].seller != address(0), "no offers");
+    return _offers[msg.sender];
   }
 
-  function offer(uint256 tokenId) public view returns (AccountOffer memory) {
-    return _offers[tokenId];
+  function myOffersForSale() public view returns (AccountOffer memory) {
+    require(_offersForSale[msg.sender].seller != address(0), "no offers for sale");
+    return _offersForSale[msg.sender];
   }
 
   /// @notice Mints new Non-Fungible token for given address
@@ -63,8 +70,7 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
   /// @param tokenURI link to the platform that platformAccountId is associated with
   function tokenize(address ownerAddress, string memory platformAccountId, string memory tokenURI)
       public
-      onlyNewAccounts
-  {
+      onlyNewAccounts {
       _tokenIds.increment();
       uint256 newItemId = _randomizeToken(ownerAddress, platformAccountId, _tokenIds.current());
       _safeMint(ownerAddress, newItemId);
@@ -81,33 +87,43 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
     return _tokenHolders[holder];
   }
 
-  function addAccountForSale(uint256 price, uint256 tokenId) public onlyTokenHolder {
+  function addAccountForSale(uint256 price, uint256 tokenId, address receiver) public onlyTokenHolder {
     require(ownerOf(tokenId) == msg.sender, "caller must own given token");
     require(isApprovedForAll(msg.sender, address(this)), "contract must be approved");
 
-    // todo verify that who receives money is still owner of the token
+    AccountOffer memory offer = AccountOffer(tokenId, price, msg.sender);
+    approve(receiver, tokenId);
+    _offers[receiver] = offer;
+    _offersForSale[msg.sender] = offer;
+    emit AccountPutForSale(price, msg.sender, receiver);
+  }
 
+  function removeAccountForSale(uint256 tokenId, address receiver) public onlyTokenHolder {
+    require(ownerOf(tokenId) == msg.sender, "caller must own given token");
 
-    _offers[tokenId] = AccountOffer(price, msg.sender, false);
-    _tokensForSale.push(tokenId);
-    emit AccountPutForSale(price, msg.sender);
+    delete _offersForSale[receiver];
+
+    // todo don't allow for transfer
+
+    emit AccountForSaleRemoved(tokenId);
   }
 
   function buyAccount(uint256 tokenId) public payable onlyNewAccounts {
-    AccountOffer memory item = _offers[tokenId];
+    AccountOffer memory item = _offers[msg.sender];
     require(msg.value >= item.price, "insufficient funds sent");
-    require(_offers[tokenId].sold == false, "token is not for sale");
+    // require(getApproved() == msg.sender, "buyer not approved");
+    // todo guard after offer has been removed
 
-    // todo verify
-    // setApprovalForAll(msg.sender, true);
     safeTransferFrom(item.seller, msg.sender, tokenId);
     payable(item.seller).transfer(msg.value);
 
     // update owner
     delete _tokenHolders[item.seller];
-    item.sold = true;
-    // offers[tokenId] = item;
+    delete _offers[msg.sender];
+    delete _offersForSale[item.seller];
     _tokenHolders[msg.sender] = tokenId;
+    setApprovalForAll(address(this), true);
+    emit AccountBought(tokenId, msg.sender);
   }
 
   /// @notice not implemented yet

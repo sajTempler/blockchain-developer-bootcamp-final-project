@@ -24,6 +24,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Tooltip } from "@mui/material";
 import PutAccountForSale from "./PutAccountForSale/PutAccountForSale";
 import Market from "./Market/Market";
+import MyOffers from "./MyOffers/MyOffers";
 
 const centerStyles = {
   alignItems: "center",
@@ -126,6 +127,18 @@ const Profile = () => {
               <PutAccountForSale />
               <CheckTokenOwner />
             </TokenizeAccountProvider>
+          </CardContent>
+        </Card>
+        <Card sx={{ minWidth: 275, my: 4 }}>
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              My account for sale
+            </Typography>
+            <MyOffers />
           </CardContent>
         </Card>
         <Card sx={{ minWidth: 275, my: 4 }}>

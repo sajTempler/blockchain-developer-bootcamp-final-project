@@ -6,7 +6,6 @@ import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Identicon from "react-identicons";
 import { useTokenizeAccountContract } from "../TokenizeAccount/hooks";
-import { useAccountBoughtListener } from "./hooks";
 
 const commonSx = {
   display: "flex",
@@ -15,22 +14,16 @@ const commonSx = {
   height: "10rem",
 };
 
-const Market = () => {
+const MyOffers = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState({ offers: "IDLE", buy: "IDLE" }); // "IDLE" | "PENDING" | "LOADED" | "ERROR"
   const [errors, setErrors] = useState({});
   const { contract, selectedAccount } = useTokenizeAccountContract();
 
-  const resetOffers = () => {
-    setOffers([]);
-  };
-
-  useAccountBoughtListener(contract, setLoading, resetOffers);
-
   useEffect(() => {
     setLoading((prev) => ({ ...prev, offers: "PENDING" }));
     contract
-      .myOffers()
+      .myOffersForSale()
       .then((myOffer) => {
         console.log("myOffer", myOffer);
         setOffers([
@@ -49,29 +42,9 @@ const Market = () => {
       });
   }, [contract, selectedAccount]);
 
-  const buy = (offer) => {
-    console.log(`About to buy ${offer.tokenId}`);
-    setLoading((prev) => ({ ...prev, buy: "PENDING" }));
-    contract
-      .buyAccount(offer.tokenId, {
-        value: ethers.utils.parseEther(offer.price),
-      })
-      .then((res) => {
-        console.log("buy", res);
-        setErrors((prev) => ({
-          ...prev,
-          buy: undefined,
-        }));
-      })
-      .catch((e) => {
-        setLoading((prev) => ({ ...prev, buy: "ERROR" }));
-        setErrors((prev) => ({
-          ...prev,
-          buy: e?.data?.message ?? "Unknown error",
-        }));
-        console.error(e);
-      });
-  };
+  const remove = () => {
+      
+  }
 
   return (
     <Grid container spacing={2}>
@@ -107,10 +80,11 @@ const Market = () => {
                   />
                 </Box>
                 <Button
-                  disabled={loading.buy === "PENDING"}
-                  onClick={() => buy(offer)}
+                  variant="danger"
+                  disabled={offer.sold || loading.buy === "PENDING"}
+                  onClick={() => remove(offer)}
                 >
-                  BUY
+                  REMOVE
                 </Button>
               </Box>
             </Paper>
@@ -130,4 +104,4 @@ const Market = () => {
   );
 };
 
-export default Market;
+export default MyOffers;

@@ -4,12 +4,44 @@
 
 export const CONTRACT_MAP = {
   TokenizeAccount: {
-    address: "0x65593c77fa2a6fb475E0fa238237Eb9B84bF7550",
+    address: "0xaE1C10A7bB9a7FA92Aa660A5e76DAa54F6CFC4F0",
     abi: [
       {
         "inputs": [],
         "stateMutability": "nonpayable",
         "type": "constructor"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "token",
+            "type": "uint256"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "sender",
+            "type": "address"
+          }
+        ],
+        "name": "AccountBought",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          }
+        ],
+        "name": "AccountForSaleRemoved",
+        "type": "event"
       },
       {
         "anonymous": false,
@@ -24,6 +56,12 @@ export const CONTRACT_MAP = {
             "indexed": true,
             "internalType": "address",
             "name": "seller",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "receiver",
             "type": "address"
           }
         ],
@@ -442,30 +480,15 @@ export const CONTRACT_MAP = {
       },
       {
         "inputs": [],
-        "name": "tokensForSale",
-        "outputs": [
-          {
-            "internalType": "uint256[]",
-            "name": "",
-            "type": "uint256[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          }
-        ],
-        "name": "offer",
+        "name": "myOffers",
         "outputs": [
           {
             "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
               {
                 "internalType": "uint256",
                 "name": "price",
@@ -475,11 +498,37 @@ export const CONTRACT_MAP = {
                 "internalType": "address",
                 "name": "seller",
                 "type": "address"
+              }
+            ],
+            "internalType": "struct TokenizedAccounts.AccountOffer",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [],
+        "name": "myOffersForSale",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
               },
               {
-                "internalType": "bool",
-                "name": "sold",
-                "type": "bool"
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
               }
             ],
             "internalType": "struct TokenizedAccounts.AccountOffer",
@@ -545,9 +594,32 @@ export const CONTRACT_MAP = {
             "internalType": "uint256",
             "name": "tokenId",
             "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "receiver",
+            "type": "address"
           }
         ],
         "name": "addAccountForSale",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "receiver",
+            "type": "address"
+          }
+        ],
+        "name": "removeAccountForSale",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
