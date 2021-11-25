@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity >=0.8.9 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
@@ -86,7 +86,7 @@ contract TokenizedAccounts is ERC721URIStorage {
   /// @param tokenURI link to the platform that platformAccountId is associated with
   function tokenize(address ownerAddress, string memory platformAccountId, string memory tokenURI)
       public
-      onlyNewAccounts {
+      onlyNewAccounts returns(uint256) {
       _tokenIds.increment();
       uint256 newItemId = _randomizeToken(ownerAddress, platformAccountId, _tokenIds.current());
       _safeMint(ownerAddress, newItemId);
@@ -94,6 +94,7 @@ contract TokenizedAccounts is ERC721URIStorage {
       _addTokenHolder(ownerAddress, newItemId);
       setApprovalForAll(address(this), true);
       emit AccountTokenized(newItemId, ownerAddress);
+      return newItemId;
   }
 
   /// @notice Returns a token for given token holder, only owner can lookup his tokens
