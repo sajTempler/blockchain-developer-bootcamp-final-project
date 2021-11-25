@@ -2,7 +2,7 @@
 
 ## SWC-103 (Floating pragma)
 
-Specific compiler pragma `0.8.0` used in contract to avoid accidental bug inclusion through outdated compiler versions.
+Specific compiler pragma `0.8.9` used in contract to avoid accidental bug inclusion through outdated compiler versions.
 
 ## Modifiers used only for validation
 
