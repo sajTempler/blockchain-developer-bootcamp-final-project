@@ -1,6 +1,8 @@
 import React from "react";
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import Switch from "@mui/material/Switch";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 import { useTokenizeAccount } from "./context";
 import {
@@ -9,14 +11,12 @@ import {
   useTokenizeAccountContract,
 } from "./hooks";
 import { TOKENIZE_ACCOUNT } from "./actions";
-import { useProvider } from "../state/hooks";
 
 const TokenizeAccount = () => {
   // example user id from any platform
   const userId = "12345";
   const { selectedAccount, contract } = useTokenizeAccountContract();
   const { state, dispatch } = useTokenizeAccount();
-  const { provider } = useProvider();
   useAccountTokenizedListener(contract, dispatch);
   useInitAccountToken(contract, dispatch);
 
@@ -30,20 +30,6 @@ const TokenizeAccount = () => {
         userId,
         `${window.location.origin}/api/user/${userId}`
       )
-      .then((res) => {
-        console.log("contract tokenize", res);
-        provider
-          .waitForTransaction(res.hash)
-          .then((res) => {
-            console.log("contract tokenize waitForTransaction res", res);
-            dispatch({
-              type: TOKENIZE_ACCOUNT.SET_COMPLETED,
-            });
-          })
-          .catch((e) => {
-            console.error("waitForTransaction e", e);
-          });
-      })
       .catch((e) => {
         console.error("tokenize e", e);
         dispatch({
@@ -58,11 +44,17 @@ const TokenizeAccount = () => {
       <Typography sx={{ my: 2 }} variant="h5" component="div">
         {state.accountTokenized ? "Account tokenized" : "Tokenize account"}
       </Typography>
-      <Switch
-        disabled={state.accountTokenized || state.state === "TOKENIZE_STARTED"}
-        onChange={handleSwitchChange}
-        checked={state.accountTokenized}
-      />
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Switch
+          disabled={
+            state.accountTokenized || state.status === "TOKENIZE_STARTED"
+          }
+          onChange={handleSwitchChange}
+          checked={state.accountTokenized}
+        />
+        {state.status === "TOKENIZE_STARTED" && <CircularProgress size={"2rem"} />}
+      </Box>
+
       {state?.accountTokenized && (
         <Typography sx={{ my: 2 }} variant="body2" component="p">
           Token {state?.token && state.token}

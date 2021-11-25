@@ -34,6 +34,9 @@ export const useAccountTokenizedListener = (contract, dispatch) => {
           );
           console.log(`useAccountTokenizedListener Tokenized ${token}`);
           dispatch({
+            type: TOKENIZE_ACCOUNT.SET_COMPLETED,
+          });
+          dispatch({
             type: TOKENIZE_ACCOUNT.SET_TOKEN,
             payload: { token: `${token}` },
           });

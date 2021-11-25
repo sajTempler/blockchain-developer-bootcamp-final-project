@@ -4,7 +4,7 @@
 
 export const CONTRACT_MAP = {
   TokenizeAccount: {
-    address: "0x0ad07224247841fEf37e5CD446AB000688f02Ca3",
+    address: "0x65593c77fa2a6fb475E0fa238237Eb9B84bF7550",
     abi: [
       {
         "inputs": [],
@@ -442,12 +442,49 @@ export const CONTRACT_MAP = {
       },
       {
         "inputs": [],
-        "name": "offersCount",
+        "name": "tokensForSale",
         "outputs": [
           {
-            "internalType": "uint256",
+            "internalType": "uint256[]",
             "name": "",
+            "type": "uint256[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "constant": true
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
             "type": "uint256"
+          }
+        ],
+        "name": "offer",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+              },
+              {
+                "internalType": "bool",
+                "name": "sold",
+                "type": "bool"
+              }
+            ],
+            "internalType": "struct TokenizedAccounts.AccountOffer",
+            "name": "",
+            "type": "tuple"
           }
         ],
         "stateMutability": "view",

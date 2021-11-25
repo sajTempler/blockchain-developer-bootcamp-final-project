@@ -7,12 +7,14 @@ import Box from "@mui/material/Box";
 import { useTokenizeAccountContract } from "../TokenizeAccount/hooks";
 import { useTokenizeAccount } from "../TokenizeAccount/context";
 import { ethers } from "ethers";
+import { useAccountPutForSaleListener } from "./hooks";
 
 const PutAccountForSale = () => {
   const [loading, setLoading] = useState("IDLE"); // "IDLE" | "PENDING" | "LOADED" | "ERROR"
   const [error, setError] = useState();
   const { state } = useTokenizeAccount();
   const { selectedAccount, contract } = useTokenizeAccountContract();
+  useAccountPutForSaleListener(contract, setLoading);
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (form) => {
@@ -26,9 +28,7 @@ const PutAccountForSale = () => {
       .then((tokenId) => {
         contract
           .addAccountForSale(price, tokenId)
-          .then((res) => {
-            console.log(res);
-            setLoading("LOADED");
+          .then(() => {
             setError();
           })
           .catch((e) => {
@@ -65,10 +65,10 @@ const PutAccountForSale = () => {
             })}
             label="Amount (Eth)"
             type="text"
-            disabled={!state?.accountTokenized}
+            disabled={!state?.accountTokenized || loading === "LOADED"}
           />
           <LoadingButton
-            disabled={!state?.accountTokenized}
+            disabled={!state?.accountTokenized || loading === "LOADED"}
             loading={loading === "PENDING"}
             type="submit"
           >

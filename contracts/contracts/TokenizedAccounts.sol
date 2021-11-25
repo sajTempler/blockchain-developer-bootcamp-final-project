@@ -25,14 +25,15 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
   mapping(address => uint256) private _tokenHolders;
 
   /// @notice This mapping holds available accounts for sale
-  mapping(uint256 => AccountOffer) private offers;
+  mapping(uint256 => AccountOffer) private _offers;
 
-  /// @notice Keeps track of offers mapping length
-  uint32 private _offersCount;
+  /// @notice Keeps track of offers
+  uint256[] private _tokensForSale;
 
   struct AccountOffer {
     uint256 price;
     address seller;
+    bool sold;
   }
 
   modifier onlyTokenHolder() {
@@ -41,17 +42,19 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
   }
 
   modifier onlyNewAccounts() {
-    require(_tokenHolders[msg.sender] == 0, "Caller does not hold any tokens");
+    require(_tokenHolders[msg.sender] == 0, "Caller already hold a token");
     _;
   }
 
   constructor() ERC721("TokenizedAccount", "TDA") {
-    // setApprovalForAll(address(this), true);
-    _offersCount = 0;
   }
 
-  function offersCount() public view returns (uint256) {
-    return _offersCount;
+  function tokensForSale() public view returns (uint256[] memory) {
+    return _tokensForSale;
+  }
+
+  function offer(uint256 tokenId) public view returns (AccountOffer memory) {
+    return _offers[tokenId];
   }
 
   /// @notice Mints new Non-Fungible token for given address
@@ -85,21 +88,25 @@ contract TokenizedAccounts is Ownable, ERC721URIStorage {
     // todo verify that who receives money is still owner of the token
 
 
-    offers[tokenId] = AccountOffer(price, msg.sender);
-    _offersCount++;
+    _offers[tokenId] = AccountOffer(price, msg.sender, false);
+    _tokensForSale.push(tokenId);
     emit AccountPutForSale(price, msg.sender);
   }
 
   function buyAccount(uint256 tokenId) public payable onlyNewAccounts {
-    AccountOffer memory item = offers[tokenId];
+    AccountOffer memory item = _offers[tokenId];
     require(msg.value >= item.price, "insufficient funds sent");
-    
+    require(_offers[tokenId].sold == false, "token is not for sale");
+
+    // todo verify
+    // setApprovalForAll(msg.sender, true);
     safeTransferFrom(item.seller, msg.sender, tokenId);
     payable(item.seller).transfer(msg.value);
 
     // update owner
     delete _tokenHolders[item.seller];
-    _offersCount--;
+    item.sold = true;
+    // offers[tokenId] = item;
     _tokenHolders[msg.sender] = tokenId;
   }
 
