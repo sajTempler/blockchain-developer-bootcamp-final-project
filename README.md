@@ -1,5 +1,8 @@
 # Final project idea - Any NFT re-sale negotiation platform
 
+## Public URL
+https://consensys-bootcamp-final-proje.herokuapp.com/
+
 ## Summary
 A form of chat that two (or more) parties negotiate the price of given NFT. One party have to hold NFT already. The dapp will verify if first party (seller) is the owner of a NFT. Once verified the special message with price proposal will be available for both participants. Buyer can propose a price (which will be erified against his/her account) which seller can accept or propose different price that buyer can accept.
 Once accepted the transaction is initialized and seller has to sign it.
