@@ -43,8 +43,9 @@ const MyOffers = () => {
   }, [contract, selectedAccount]);
 
   const remove = () => {
-      
-  }
+    // todo remove
+    alert("not implemented yet");
+  };
 
   return (
     <Grid container spacing={2}>
