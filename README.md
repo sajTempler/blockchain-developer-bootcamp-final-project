@@ -79,6 +79,22 @@ this will run application on `http://localhost:3000/
 -   `/contracts/migrations`: Migration files for deploying contracts in  `/contracts/contracts`  directory.
 -   `/contracts/test`: Tests for smart contracts.
 
+## Running contract tests
+
+Run following:
+
+```bash
+# in first terminal
+cd /contracts
+# assuming you did already 'npm install'
+./node_modules/.bin/ganache-cli --chainId=1337
+
+# in second terminal
+cd /contracts
+./node_modules/.bin/truffle test
+
+```
+
 ## Public address for NFT certification
 
 `0x36d9E7c69Df4F0A20Ae41Ae21414Eaa56Aec6896`
