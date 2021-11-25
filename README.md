@@ -6,7 +6,9 @@
 
 https://consensys-bootcamp-final-proje.herokuapp.com/
 
-  
+## Screencast URL:
+
+- TBC
 
 ## Summary
 
@@ -69,10 +71,6 @@ npm i
 npm start
 ```
 this will run application on `http://localhost:3000/
-
-## Screencast URL:
-
-- TBC
 
 ## Directory structure
 
