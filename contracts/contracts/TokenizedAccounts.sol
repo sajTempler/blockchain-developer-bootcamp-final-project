@@ -9,28 +9,33 @@ contract TokenizedAccounts is ERC721URIStorage {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
 
-  /// @notice Emitted when a new account is minted
-  /// @param accountToken Account token
+  /// @notice Emitted when a new token is minted
+  /// @param token The token associated with a user account
   /// @param ownerAddress Address of token's new owner
-  event AccountTokenized(uint256 indexed accountToken, address indexed ownerAddress);
+  event AccountTokenized(uint256 indexed token, address indexed ownerAddress);
 
-  /// @notice Emitted when an account is added for offers listing
-  /// @param price Price for new listing
+  /// @notice Emitted when a token is put for sale listing
+  /// @param price Price of a listing token
   /// @param seller Address of a seller
-  /// @param receiver Approved addres of a buyer
-  event AccountPutForSale(uint256 indexed price, address indexed seller, address indexed receiver);
+  /// @param buyer Approved address of a buyer
+  event AccountPutForSale(uint256 indexed price, address indexed seller, address indexed buyer);
 
-  event AccountBought(uint256 indexed token, address indexed sender);
+  /// @notice Emitted when a token is sold/bought
+  /// @param token The token associated with a user account
+  /// @param buyer Approved address of a buyer
+  event AccountBought(uint256 indexed token, address indexed buyer);
 
-  event AccountForSaleRemoved(uint256 indexed tokenId);
+  /// @notice Emitted when a token owner removes a token from selling list
+  /// @param token The token associated with a user account
+  event AccountForSaleRemoved(uint256 indexed token);
 
-  /// @notice Mapping from owner address to token (Account Token)
+  /// @notice Mapping from owner address to a token (Account Token)
   mapping(address => uint256) private _tokenHolders;
 
-  /// @notice This mapping holds available account for sale for you
+  /// @notice Holds available offerings for sale for given address
   mapping(address => AccountOffer) private _offers;
 
-  /// @notice This mapping holds available account for sale for you
+  /// @notice Holds offerss put for sale by given address
   mapping(address => AccountOffer) private _offersForSale;
 
   struct AccountOffer {
@@ -39,24 +44,37 @@ contract TokenizedAccounts is ERC721URIStorage {
     address seller;
   }
 
+  /**
+    * @dev Throws if called by account that does not hold any tokens.
+    */
   modifier onlyTokenHolder() {
       require(_tokenHolders[msg.sender] != 0, "Caller does not hold any tokens");
       _;
   }
 
+  /**
+    * @dev Throws if called by account that already does hold a token.
+    */
   modifier onlyNewAccounts() {
     require(_tokenHolders[msg.sender] == 0, "Caller already hold a token");
     _;
   }
 
+  /**
+    * @dev Initializes the contract.
+    */
   constructor() ERC721("TokenizedAccount", "TDA") {
   }
 
+  /// @notice Returns offers avilable to buy by sender
+  /// @return AccountOffer struct
   function myOffers() public view returns (AccountOffer memory) {
     require(_offers[msg.sender].seller != address(0), "no offers");
     return _offers[msg.sender];
   }
 
+  /// @notice Returns offers that are put for sale by sender
+  /// @return AccountOffer struct
   function myOffersForSale() public view returns (AccountOffer memory) {
     require(_offersForSale[msg.sender].seller != address(0), "no offers for sale");
     return _offersForSale[msg.sender];
@@ -80,37 +98,41 @@ contract TokenizedAccounts is ERC721URIStorage {
 
   /// @notice Returns a token for given token holder, only owner can lookup his tokens
   /// @param holder holder address for whom the token was assigned
+  /// @return uint256 token
   function retrieveMyToken(address holder) public view returns (uint256) {
     require(holder == msg.sender, "Only owner can check his tokens");
     return _tokenHolders[holder];
   }
 
-  function addAccountForSale(uint256 price, uint256 tokenId, address receiver) public onlyTokenHolder {
+  /// @notice Put given token for a sale for given price for given address
+  /// @param price price for given token
+  /// @param tokenId given token for sale
+  /// @param buyer address of a buyer that will be approve
+  function addAccountForSale(uint256 price, uint256 tokenId, address buyer) public onlyTokenHolder {
     require(ownerOf(tokenId) == msg.sender, "caller must own given token");
     require(isApprovedForAll(msg.sender, address(this)), "contract must be approved");
 
     AccountOffer memory offer = AccountOffer(tokenId, price, msg.sender);
-    approve(receiver, tokenId);
-    _offers[receiver] = offer;
+    approve(buyer, tokenId);
+    _offers[buyer] = offer;
     _offersForSale[msg.sender] = offer;
-    emit AccountPutForSale(price, msg.sender, receiver);
+    emit AccountPutForSale(price, msg.sender, buyer);
   }
 
-  function removeAccountForSale(uint256 tokenId, address receiver) public onlyTokenHolder {
+  /// @notice Put given token for a sale for given price for given address
+  /// @param tokenId given token to be removed from sale listing
+  /// @param buyer address of a buyer
+  function removeAccountForSale(uint256 tokenId, address buyer) public onlyTokenHolder {
     require(ownerOf(tokenId) == msg.sender, "caller must own given token");
-
-    delete _offersForSale[receiver];
-
-    // todo don't allow for transfer
-
+    delete _offersForSale[buyer];
     emit AccountForSaleRemoved(tokenId);
   }
 
+  /// @notice Transfers a token to a buyer address for given price
+  /// @param tokenId given token to be bought
   function buyAccount(uint256 tokenId) public payable onlyNewAccounts {
     AccountOffer memory item = _offers[msg.sender];
     require(msg.value >= item.price, "insufficient funds sent");
-    // require(getApproved() == msg.sender, "buyer not approved");
-    // todo guard after offer has been removed
 
     safeTransferFrom(item.seller, msg.sender, tokenId);
     payable(item.seller).transfer(msg.value);
