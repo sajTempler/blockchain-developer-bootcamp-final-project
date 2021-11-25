@@ -78,3 +78,7 @@ this will run application on `http://localhost:3000/
 -   `/contracts/contracts`: Smart contract that is deployed in the Ropsten testnet.
 -   `/contracts/migrations`: Migration files for deploying contracts in  `/contracts/contracts`  directory.
 -   `/contracts/test`: Tests for smart contracts.
+
+## Public address for NFT certification
+
+`0x36d9E7c69Df4F0A20Ae41Ae21414Eaa56Aec6896`
