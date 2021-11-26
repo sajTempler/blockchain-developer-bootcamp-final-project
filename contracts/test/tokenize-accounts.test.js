@@ -13,7 +13,7 @@ contract("TokenizedAccounts", (accounts) => {
       "https://example.com/users/12345"
     );
 
-    testToken = `${tx.logs[2].args.token}`;
+    testToken = `${tx.logs[1].args.token}`;
 
     assert.web3Event(
       tx,
@@ -23,7 +23,7 @@ contract("TokenizedAccounts", (accounts) => {
       "The event is emitted"
     );
 
-    assert.equal(tx.logs[2].args.ownerAddress, accounts[0]);
+    assert.equal(tx.logs[1].args.ownerAddress, accounts[0]);
   });
 
   it("should return token for given address", async () => {

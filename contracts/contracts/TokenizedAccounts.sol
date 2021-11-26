@@ -92,7 +92,6 @@ contract TokenizedAccounts is ERC721URIStorage {
       _safeMint(ownerAddress, newItemId);
       _setTokenURI(newItemId, tokenURI);
       _addTokenHolder(ownerAddress, newItemId);
-      setApprovalForAll(address(this), true);
       emit AccountTokenized(newItemId, ownerAddress);
       return newItemId;
   }
@@ -111,7 +110,6 @@ contract TokenizedAccounts is ERC721URIStorage {
   /// @param buyer address of a buyer that will be approve
   function addAccountForSale(uint256 price, uint256 tokenId, address buyer) public onlyTokenHolder {
     require(ownerOf(tokenId) == msg.sender, "caller must own given token");
-    require(isApprovedForAll(msg.sender, address(this)), "contract must be approved");
 
     AccountOffer memory offer = AccountOffer(tokenId, price, msg.sender);
     approve(buyer, tokenId);
@@ -143,7 +141,6 @@ contract TokenizedAccounts is ERC721URIStorage {
     delete _offers[msg.sender];
     delete _offersForSale[item.seller];
     _tokenHolders[msg.sender] = tokenId;
-    setApprovalForAll(address(this), true);
     emit AccountBought(tokenId, msg.sender);
   }
 
