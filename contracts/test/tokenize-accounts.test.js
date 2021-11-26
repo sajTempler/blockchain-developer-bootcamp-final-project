@@ -3,6 +3,7 @@ const ethers = require("ethers");
 const TokenizedAccounts = artifacts.require("TokenizedAccounts");
 
 contract("TokenizedAccounts", (accounts) => {
+  let testToken;
   it("should tokenize account and emit AccountTokenized", async () => {
     const instance = await TokenizedAccounts.deployed();
 
@@ -12,19 +13,17 @@ contract("TokenizedAccounts", (accounts) => {
       "https://example.com/users/12345"
     );
 
+    testToken = `${tx.logs[2].args.token}`;
+
     assert.web3Event(
       tx,
       {
         event: "AccountTokenized",
-        // args: {
-        // token:
-        //   "82811743367304812115272119008401853174207022172515034953957631840453225150288",
-        // cant verify due to Number can only safely store up to 53 bits
-        // ownerAddress: "0xBD70bb01B821eB3C61dc9aD779b496d13b1d5737",
-        // },
       },
       "The event is emitted"
     );
+
+    assert.equal(tx.logs[2].args.ownerAddress, accounts[0]);
   });
 
   it("should return token for given address", async () => {
@@ -32,10 +31,7 @@ contract("TokenizedAccounts", (accounts) => {
 
     const token = await instance.retrieveMyToken.call(accounts[0]);
 
-    assert.equal(
-      token.toString(),
-      "104521540626363347524687337254239023513155440674470254388754714499441519928735"
-    );
+    assert.equal(token.toString(), testToken);
   });
 
   it("should put token for sale and emit AccountPutForSale event", async () => {
@@ -73,10 +69,7 @@ contract("TokenizedAccounts", (accounts) => {
 
     const offer = await instance.myOffers.call({ from: accounts[1] });
 
-    assert.equal(
-      offer.tokenId,
-      "104521540626363347524687337254239023513155440674470254388754714499441519928735"
-    );
+    assert.equal(offer.tokenId, testToken);
     assert.equal(offer.price, "2000000000000000");
     assert.equal(offer.seller, accounts[0]);
   });
@@ -84,10 +77,10 @@ contract("TokenizedAccounts", (accounts) => {
   it("token can be bought and AccountBought event is emitted", async () => {
     const instance = await TokenizedAccounts.deployed();
 
-    const tx = await instance.buyAccount(
-      "104521540626363347524687337254239023513155440674470254388754714499441519928735",
-      { from: accounts[1], value: 2000000000000000 }
-    );
+    const tx = await instance.buyAccount(testToken, {
+      from: accounts[1],
+      value: 2000000000000000,
+    });
 
     assert.web3Event(
       tx,
@@ -105,10 +98,7 @@ contract("TokenizedAccounts", (accounts) => {
       from: accounts[1],
     });
 
-    assert.equal(
-      token.toString(),
-      "104521540626363347524687337254239023513155440674470254388754714499441519928735"
-    );
+    assert.equal(token.toString(), testToken);
   });
 
   it("token should be transferred not held by original owner", async () => {
@@ -121,4 +111,3 @@ contract("TokenizedAccounts", (accounts) => {
     assert.equal(token.toString(), "0");
   });
 });
-
