@@ -1,7 +1,10 @@
 import { useEffect } from "react";
+import { ACTIONS } from "../state/actions";
+import { useApp } from "../state/app.context";
 import { useAccount } from "../state/hooks";
 
 export const useAccountPutForSaleListener = (contract, setLoading) => {
+  const { dispatch } = useApp();
   const { selectedAccount } = useAccount();
   useEffect(() => {
     if (contract && selectedAccount) {
@@ -15,6 +18,9 @@ export const useAccountPutForSaleListener = (contract, setLoading) => {
             `useAccountPutForSaleListener AccountPutForSale ${token}`
           );
           setLoading("LOADED");
+          dispatch({
+            type: ACTIONS.FORCE_REFRESH,
+          });
         }
       };
 

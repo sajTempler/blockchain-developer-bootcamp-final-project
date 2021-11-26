@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { CONTRACT_MAP } from "../config";
 import { TOKENIZE_ACCOUNT } from "./actions";
 import { useAccount, useProvider } from "../state/hooks";
+import { useApp } from "../state/app.context";
 
 export const useTokenizeAccountContract = () => {
   const { provider } = useProvider();
@@ -50,6 +51,9 @@ export const useAccountTokenizedListener = (contract, dispatch) => {
 };
 
 export const useInitAccountToken = (contract, dispatch) => {
+  const {
+    state: { forceRefresh },
+  } = useApp();
   const { selectedAccount } = useAccount();
   useEffect(() => {
     if (contract && selectedAccount) {
@@ -71,5 +75,5 @@ export const useInitAccountToken = (contract, dispatch) => {
         })
         .catch(console.error);
     }
-  }, [contract, selectedAccount, dispatch]);
+  }, [contract, selectedAccount, dispatch, forceRefresh]);
 };

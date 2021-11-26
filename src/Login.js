@@ -23,7 +23,7 @@ const Login = () => {
       setModalOpened(true);
     } else {
       try {
-        await provider.send("eth_requestAccounts", []);
+        await provider?.send("eth_requestAccounts", []);
         login();
       } catch (e) {
         console.error(e);

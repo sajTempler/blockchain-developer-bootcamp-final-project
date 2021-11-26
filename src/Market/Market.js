@@ -1,10 +1,12 @@
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Grid, Paper, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Grid, Paper, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Identicon from "react-identicons";
+import { useApp } from "../state/app.context";
 import { useTokenizeAccountContract } from "../TokenizeAccount/hooks";
 import { useAccountBoughtListener } from "./hooks";
 
@@ -20,6 +22,9 @@ const Market = () => {
   const [loading, setLoading] = useState({ offers: "IDLE", buy: "IDLE" }); // "IDLE" | "PENDING" | "LOADED" | "ERROR"
   const [errors, setErrors] = useState({});
   const { contract, selectedAccount } = useTokenizeAccountContract();
+  const {
+    state: { forceRefresh },
+  } = useApp();
 
   const resetOffers = () => {
     setOffers([]);
@@ -47,7 +52,7 @@ const Market = () => {
           setOffers([]);
         }
       });
-  }, [contract, selectedAccount]);
+  }, [contract, selectedAccount, forceRefresh]);
 
   const buy = (offer) => {
     console.log(`About to buy ${offer.tokenId}`);
@@ -106,12 +111,13 @@ const Market = () => {
                     icon={faEthereum}
                   />
                 </Box>
-                <Button
+                <LoadingButton
+                  loading={loading.buy === "PENDING"}
                   disabled={loading.buy === "PENDING"}
                   onClick={() => buy(offer)}
                 >
                   BUY
-                </Button>
+                </LoadingButton>
               </Box>
             </Paper>
             {errors?.buy && (

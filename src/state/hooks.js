@@ -3,10 +3,14 @@ import { ethers } from "ethers";
 import { CONTRACT_MAP } from "../config";
 
 export const useProvider = () => {
-  const provider = useMemo(
-    () => new ethers.providers.Web3Provider(window.ethereum),
-    []
-  );
+  const provider = useMemo(() => {
+    try {
+      return new ethers.providers.Web3Provider(window?.ethereum);
+    } catch (e) {
+      console.error(e);
+      return {};
+    }
+  }, []);
 
   return {
     provider,
@@ -46,7 +50,7 @@ export const useAccount = () => {
 export const useContract = (contractName) => {
   if (!Object.keys(CONTRACT_MAP).includes(contractName))
     throw new Error(`Contract: ${contractName} is not configured`);
-    
+
   const { provider } = useProvider();
   const { address, abi } = CONTRACT_MAP[contractName];
   const contract = new ethers.Contract(address, abi, provider.getSigner());

@@ -6,10 +6,18 @@ const AppContext = createContext();
 const initialState = {
   tokenized: false,
   provider: null,
+  forceRefresh: 2,
 };
 
 function appReducer(state, { type, payload, error }) {
+  console.log(`AppContext type: ${type}`, payload);
   switch (type) {
+    case ACTIONS.FORCE_REFRESH: {
+      return {
+        ...state,
+        forceRefresh: state.forceRefresh + 1,
+      };
+    }
     case ACTIONS.ENABLE_METAMASK: {
       return {
         ...state,

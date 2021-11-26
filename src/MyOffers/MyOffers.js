@@ -5,6 +5,7 @@ import { Box } from "@mui/system";
 import { ethers } from "ethers";
 import React, { useEffect, useState } from "react";
 import Identicon from "react-identicons";
+import { useApp } from "../state/app.context";
 import { useTokenizeAccountContract } from "../TokenizeAccount/hooks";
 
 const commonSx = {
@@ -19,6 +20,9 @@ const MyOffers = () => {
   const [loading, setLoading] = useState({ offers: "IDLE", buy: "IDLE" }); // "IDLE" | "PENDING" | "LOADED" | "ERROR"
   const [errors, setErrors] = useState({});
   const { contract, selectedAccount } = useTokenizeAccountContract();
+  const {
+    state: { forceRefresh },
+  } = useApp();
 
   useEffect(() => {
     setLoading((prev) => ({ ...prev, offers: "PENDING" }));
@@ -34,13 +38,20 @@ const MyOffers = () => {
           },
         ]);
         setLoading((prev) => ({ ...prev, offers: "LOADED" }));
+        setErrors({
+          offers: undefined,
+        });
       })
       .catch((e) => {
         if (e?.data?.message?.includes("no offers")) {
           setOffers([]);
+        } else {
+          setErrors({
+            offers: e?.data?.message,
+          });
         }
       });
-  }, [contract, selectedAccount]);
+  }, [contract, selectedAccount, forceRefresh]);
 
   const remove = () => {
     // todo remove
