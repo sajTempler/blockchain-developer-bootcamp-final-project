@@ -98,3 +98,10 @@ cd /contracts
 ## Public address for NFT certification
 
 `0x36d9E7c69Df4F0A20Ae41Ae21414Eaa56Aec6896`
+
+## Known issues
+
+### latest Metamask does not connect to localhost RPC
+
+Just run local network with `./node_modules/.bin/ganache-cli --chainId=1338`
+and add manually network in metamask with url http://127.0.0.1:8545 and chain id 1338
