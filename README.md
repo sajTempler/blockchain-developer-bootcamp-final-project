@@ -4,6 +4,8 @@
 
 ## Public URL
 
+(free tier on Heroku can be slow sometimes but app will load)
+
 https://consensys-bootcamp-final-proje.herokuapp.com/
 
 ## Screencast URL:
