@@ -58,7 +58,7 @@ Like so:
 ```javascript
 export const CONTRACT_MAP = {
 	TokenizeAccount: {
-		address:  "0x582766E0FFc2F8f8d83Cb5732A358399bDBFd0f2",
+		address:  "0xe5530125Cf4805c148BBBf2ce40F06574f46fD26",
 		abi: [...]
 	}
 }

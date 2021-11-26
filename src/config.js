@@ -4,7 +4,7 @@
 
 export const CONTRACT_MAP = {
   TokenizeAccount: {
-    address: "0x582766E0FFc2F8f8d83Cb5732A358399bDBFd0f2",
+    address: "0xe5530125Cf4805c148BBBf2ce40F06574f46fD26",
     abi: [
       {
         "inputs": [],
@@ -23,7 +23,7 @@ export const CONTRACT_MAP = {
           {
             "indexed": true,
             "internalType": "address",
-            "name": "sender",
+            "name": "buyer",
             "type": "address"
           }
         ],
@@ -36,7 +36,7 @@ export const CONTRACT_MAP = {
           {
             "indexed": true,
             "internalType": "uint256",
-            "name": "tokenId",
+            "name": "token",
             "type": "uint256"
           }
         ],
@@ -61,7 +61,7 @@ export const CONTRACT_MAP = {
           {
             "indexed": true,
             "internalType": "address",
-            "name": "receiver",
+            "name": "buyer",
             "type": "address"
           }
         ],
@@ -74,7 +74,7 @@ export const CONTRACT_MAP = {
           {
             "indexed": true,
             "internalType": "uint256",
-            "name": "accountToken",
+            "name": "token",
             "type": "uint256"
           },
           {
@@ -135,25 +135,6 @@ export const CONTRACT_MAP = {
           }
         ],
         "name": "ApprovalForAll",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "previousOwner",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "newOwner",
-            "type": "address"
-          }
-        ],
-        "name": "OwnershipTransferred",
         "type": "event"
       },
       {
@@ -279,20 +260,6 @@ export const CONTRACT_MAP = {
         "constant": true
       },
       {
-        "inputs": [],
-        "name": "owner",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
         "inputs": [
           {
             "internalType": "uint256",
@@ -311,13 +278,6 @@ export const CONTRACT_MAP = {
         "stateMutability": "view",
         "type": "function",
         "constant": true
-      },
-      {
-        "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
       },
       {
         "inputs": [
@@ -466,19 +426,6 @@ export const CONTRACT_MAP = {
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "newOwner",
-            "type": "address"
-          }
-        ],
-        "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
         "inputs": [],
         "name": "myOffers",
         "outputs": [
@@ -559,7 +506,13 @@ export const CONTRACT_MAP = {
           }
         ],
         "name": "tokenize",
-        "outputs": [],
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
         "stateMutability": "nonpayable",
         "type": "function"
       },
@@ -597,7 +550,7 @@ export const CONTRACT_MAP = {
           },
           {
             "internalType": "address",
-            "name": "receiver",
+            "name": "buyer",
             "type": "address"
           }
         ],
@@ -615,7 +568,7 @@ export const CONTRACT_MAP = {
           },
           {
             "internalType": "address",
-            "name": "receiver",
+            "name": "buyer",
             "type": "address"
           }
         ],
